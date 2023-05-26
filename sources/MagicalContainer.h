@@ -36,7 +36,7 @@ public:
 
         int operator*() const;
 
-        AscendingIterator& operator++();//preincrement
+        AscendingIterator& operator++();//preincrement isn't void in order to allow chaining like ++(++it).
         AscendingIterator begin() const;
         AscendingIterator end() const;
     };
