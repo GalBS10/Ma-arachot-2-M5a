@@ -31,29 +31,33 @@ int MagicalContainer::size()
 {
     return elements.size();
 }
-// MagicalContainer.cpp
 
-// ... include necessary headers ...
+MagicalContainer& MagicalContainer::operator=(const MagicalContainer& other){
+    if (this != &other) {
+        elements = other.elements;
+    }
+    return *this;
+}
 
-MagicalContainer::AscendingIterator::AscendingIterator(const MagicalContainer& container)
+
+MagicalContainer::AscendingIterator::AscendingIterator(MagicalContainer container)
     : container(container), currentIndex(0) {
-    // constructor implementation
+    
 }
 
 MagicalContainer::AscendingIterator::AscendingIterator(const AscendingIterator& other)
     : container(other.container), currentIndex(other.currentIndex) {
-    // copy constructor implementation
+    
 }
 
 MagicalContainer::AscendingIterator::~AscendingIterator() {
-    // destructor implementation
+    
 }
 
 MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(const AscendingIterator& other) {
     if (this != &other) {
-        // container = other.container;
+        container = other.container;
         currentIndex = other.currentIndex;
-        // assignment operator implementation
     }
     return *this;
 }
@@ -100,7 +104,7 @@ MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() c
 
 // Implement empty bodies for SideCrossIterator
 
-MagicalContainer::SideCrossIterator::SideCrossIterator(const MagicalContainer& container)
+MagicalContainer::SideCrossIterator::SideCrossIterator(MagicalContainer container)
     : container(container), currentIndex(0) {
     // constructor implementation
 }
@@ -116,7 +120,7 @@ MagicalContainer::SideCrossIterator::~SideCrossIterator() {
 
 MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const SideCrossIterator& other) {
     if (this != &other) {
-        // container = other.container;
+        container = other.container;
         currentIndex = other.currentIndex;
         // assignment operator implementation
     }
@@ -170,7 +174,7 @@ MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() c
 
 // Implement empty bodies for PrimeIterator
 
-MagicalContainer::PrimeIterator::PrimeIterator(const MagicalContainer& container)
+MagicalContainer::PrimeIterator::PrimeIterator(MagicalContainer container)
     : container(container), currentIndex(0) {
     // constructor implementation
 }
@@ -186,7 +190,7 @@ MagicalContainer::PrimeIterator::~PrimeIterator() {
 
 MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(const PrimeIterator& other) {
     if (this != &other) {
-        // container = other.container;
+        container = other.container;
         currentIndex = other.currentIndex;
         // assignment operator implementation
     }

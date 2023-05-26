@@ -14,16 +14,17 @@ public:
     void addElement(int element);
     void removeElement(int element);
     int size();
+    MagicalContainer& operator=(const MagicalContainer& other);
 
 
     class AscendingIterator
     {
     private:
-        const MagicalContainer& container;
+        MagicalContainer& container;
         size_t currentIndex;
 
     public:
-        AscendingIterator(const MagicalContainer& container);
+        AscendingIterator(MagicalContainer container);
         AscendingIterator(const AscendingIterator& other);
         ~AscendingIterator();
         AscendingIterator& operator=(const AscendingIterator& other);
@@ -43,11 +44,11 @@ public:
     class SideCrossIterator
     {
     private:
-        const MagicalContainer& container;
+        MagicalContainer& container;
         size_t currentIndex;
 
     public:
-        SideCrossIterator(const MagicalContainer& container);
+        SideCrossIterator(MagicalContainer container);
         SideCrossIterator(const SideCrossIterator& other);
         ~SideCrossIterator();
         SideCrossIterator& operator=(const SideCrossIterator& other);
@@ -68,11 +69,11 @@ public:
     class PrimeIterator
     {
     private:
-        const MagicalContainer& container;
+        MagicalContainer& container;
         size_t currentIndex;
 
     public:
-        PrimeIterator(const MagicalContainer& container);
+        PrimeIterator(MagicalContainer container);
         PrimeIterator(const PrimeIterator& other);
         ~PrimeIterator();
         PrimeIterator& operator=(const PrimeIterator& other);
