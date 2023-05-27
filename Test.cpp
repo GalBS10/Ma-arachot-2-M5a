@@ -44,12 +44,19 @@ TEST_CASE("AscendingIterator") {
     container.addElement(10);
     container.addElement(20);
     container.addElement(30);
+    container.addElement(15);
+    container.addElement(25);
+
 
     SUBCASE("Iterating over elements") {
         MagicalContainer::AscendingIterator it(container);
         CHECK(*it == 10);
         ++it;
+        CHECK(*it == 15);
+        ++it;
         CHECK(*it == 20);
+        ++it;
+        CHECK(*it == 25);
         ++it;
         CHECK(*it == 30);
         ++it;

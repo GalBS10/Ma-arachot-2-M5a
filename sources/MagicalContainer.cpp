@@ -44,7 +44,7 @@ MagicalContainer& MagicalContainer::operator=(const MagicalContainer& other){
 
 MagicalContainer::AscendingIterator::AscendingIterator(MagicalContainer& container)
     : container(&container), currentIndex(0) {
-    
+    sort(this->container->elements.begin(),this->container->elements.end());
 }
 
 MagicalContainer::AscendingIterator::AscendingIterator(const AscendingIterator& other)
@@ -160,10 +160,10 @@ int MagicalContainer::SideCrossIterator::operator*() const {
 
 MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator++() {
     if(flag){
-        this->currentIndexLeft = this->currentIndexLeft+1;
+        this->currentIndexLeft++;
     }
     else{
-        this->currentIndexRight = this->currentIndexRight-1;
+        this->currentIndexRight--;
     }
     flag = !flag;
     return *this;
@@ -184,10 +184,14 @@ MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::begin()
 MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() const {
     SideCrossIterator iterator(*container);
     if(container->size()%2 != 0){
-        iterator.currentIndexLeft = size_t(container->size()/2);
-        iterator.currentIndexRight = iterator.currentIndexLeft;
+        iterator.currentIndexLeft = size_t((container->size()/2)+1);
+        iterator.currentIndexRight = iterator.currentIndexLeft-1;
     }
-    return *this;
+    else{
+        
+
+    }
+    return iterator;
 }
 
 //--------------------PrimeIterator-------------------------------------//
