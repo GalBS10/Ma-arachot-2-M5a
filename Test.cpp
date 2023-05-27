@@ -481,7 +481,7 @@ TEST_CASE("Multiple Iterators Test") {
         CHECK(*it2 == 3);
         CHECK(*it1 == 5);
         ++(++it2);
-        CHECK(*it2 == 3);
+        CHECK(*it2 == 7);
     }
 }
 

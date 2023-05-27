@@ -1,5 +1,6 @@
 #include "MagicalContainer.h"
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
@@ -41,7 +42,7 @@ MagicalContainer& MagicalContainer::operator=(const MagicalContainer& other){
 
 //--------------------AscendingIterator-------------------------------------//
 
-MagicalContainer::AscendingIterator::AscendingIterator(MagicalContainer container)
+MagicalContainer::AscendingIterator::AscendingIterator(MagicalContainer& container)
     : container(&container), currentIndex(0) {
     
 }
@@ -97,14 +98,14 @@ MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::begin()
 
 MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() const {
     AscendingIterator iterator(*container);
-    iterator.currentIndex = container->size();
+    iterator.currentIndex = (size_t)(container->size());
     return iterator;
 }
 
 //--------------------SideCrossIterator-------------------------------------//
 
-MagicalContainer::SideCrossIterator::SideCrossIterator(MagicalContainer container)
-    : container(&container), currentIndexLeft(0),currentIndexRight(container.size()), flag(true) {
+MagicalContainer::SideCrossIterator::SideCrossIterator(MagicalContainer& container)
+    : container(&container), currentIndexLeft(0),currentIndexRight(size_t(container.size()-1)), flag(true) {
 }
 
 MagicalContainer::SideCrossIterator::SideCrossIterator(const SideCrossIterator& other)
@@ -164,6 +165,7 @@ MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operat
     else{
         this->currentIndexRight = this->currentIndexRight-1;
     }
+    flag = !flag;
     return *this;
 }
 
@@ -175,14 +177,14 @@ MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operat
 MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::begin() const {
     SideCrossIterator iterator(*container);
     iterator.currentIndexLeft = 0;
-    iterator.currentIndexRight = container->size();
+    iterator.currentIndexRight = size_t(container->size()-1);
     return iterator;
 }
 
 MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() const {
     SideCrossIterator iterator(*container);
     if(container->size()%2 != 0){
-        iterator.currentIndexLeft = container->size()/2;
+        iterator.currentIndexLeft = size_t(container->size()/2);
         iterator.currentIndexRight = iterator.currentIndexLeft;
     }
     return *this;
@@ -190,67 +192,89 @@ MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() c
 
 //--------------------PrimeIterator-------------------------------------//
 
-MagicalContainer::PrimeIterator::PrimeIterator(MagicalContainer container)
-    : container(container), currentIndex(0) {
-    // constructor implementation
+bool MagicalContainer::PrimeIterator::isPrime(int number)
+{
+    if(number < 2)//1,0 or negetive integers are not primes. 
+    {
+        return false;
+    }
+    if(number == 2){
+        return true;
+    }
+    for(int i = 3;i<=sqrt(number);i+=2){
+        if(number%i == 0){
+            return false;
+        }
+    }
+    return true;
+}
+
+MagicalContainer::PrimeIterator::PrimeIterator(MagicalContainer& container)
+    : container(&container), currentIndex(0), primes() {
+
+    for(size_t i = 0; i<container.size(); i++){
+        if(isPrime(container.elements.at(i))){
+            primes.emplace_back(container.elements.at(i));
+        }
+    }
 }
 
 MagicalContainer::PrimeIterator::PrimeIterator(const PrimeIterator& other)
-    : container(other.container), currentIndex(other.currentIndex) {
-    // copy constructor implementation
+    : container(other.container), currentIndex(other.currentIndex), primes(other.primes) {
+
 }
 
 MagicalContainer::PrimeIterator::~PrimeIterator() {
-    // destructor implementation
 }
 
 MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(const PrimeIterator& other) {
     if (this != &other) {
         container = other.container;
         currentIndex = other.currentIndex;
-        // assignment operator implementation
+        primes = other.primes;
     }
     return *this;
 }
 
 bool MagicalContainer::PrimeIterator::operator==(const PrimeIterator& other) const {
-    // operator== implementation
-    return true;
+    
+    return currentIndex == other.currentIndex;
 }
 
 bool MagicalContainer::PrimeIterator::operator!=(const PrimeIterator& other) const {
-    // operator!= implementation
-    return true;
+    return currentIndex != other.currentIndex;
 }
 
 bool MagicalContainer::PrimeIterator::operator<(const PrimeIterator& other) const {
-    // operator< implementation
-    return true;
+    return currentIndex < other.currentIndex;
 }
 
 bool MagicalContainer::PrimeIterator::operator>(const PrimeIterator& other) const {
-    // operator> implementation
-    return true;
+    return currentIndex > other.currentIndex;
 }
 
 int MagicalContainer::PrimeIterator::operator*() const {
-    // operator* implementation
-    return 0;
+    return primes.at(currentIndex);
 }
 
 MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++() {
-    // operator++ implementation
+    this->currentIndex = this->currentIndex+1;
     return *this;
 }
 
-MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::begin() const {
-    // begin implementation
-    return *this;
+
+MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::begin() const{
+    MagicalContainer::PrimeIterator it(*container);
+    it.currentIndex = 0;
+    it.primes = primes;
+    return it;
 }
 
 MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() const {
-    // end implementation
-    return *this;
+    MagicalContainer::PrimeIterator it(*container);
+    it.currentIndex = primes.size();
+    it.primes = primes;
+    return it;
 }
 
 

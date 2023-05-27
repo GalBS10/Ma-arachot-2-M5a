@@ -2,6 +2,8 @@
 #include <vector>
 #include <algorithm>
 
+using namespace std;
+
 class MagicalContainer
 {
 private:
@@ -24,7 +26,7 @@ public:
         size_t currentIndex;
 
     public:
-        AscendingIterator(MagicalContainer container);
+        AscendingIterator(MagicalContainer& container);
         AscendingIterator(const AscendingIterator& other);
         ~AscendingIterator();
         AscendingIterator& operator=(const AscendingIterator& other);
@@ -50,7 +52,7 @@ public:
         bool flag;
 
     public:
-        SideCrossIterator(MagicalContainer container);
+        SideCrossIterator(MagicalContainer& container);
         SideCrossIterator(const SideCrossIterator& other);
         ~SideCrossIterator();
         SideCrossIterator& operator=(const SideCrossIterator& other);
@@ -71,11 +73,12 @@ public:
     class PrimeIterator
     {
     private:
-        MagicalContainer& container;
+        MagicalContainer* container;
+        vector<int> primes; // there is problem that after adding a new element to container this is not updating
         size_t currentIndex;
 
     public:
-        PrimeIterator(MagicalContainer container);
+        PrimeIterator(MagicalContainer& container);
         PrimeIterator(const PrimeIterator& other);
         ~PrimeIterator();
         PrimeIterator& operator=(const PrimeIterator& other);
@@ -90,5 +93,7 @@ public:
         PrimeIterator& operator++();//preincrement
         PrimeIterator begin() const;
         PrimeIterator end() const;
+
+        bool isPrime(int number);
     };
 };
