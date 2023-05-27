@@ -47,11 +47,11 @@ public:
     {
     private:
         MagicalContainer* container;
-
-    public:
         size_t currentIndexLeft;
         size_t currentIndexRight;
         bool flag;
+
+    public:
         SideCrossIterator(MagicalContainer& container);
         SideCrossIterator(const SideCrossIterator& other);
         ~SideCrossIterator();

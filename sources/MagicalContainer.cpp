@@ -86,6 +86,9 @@ int MagicalContainer::AscendingIterator::operator*() const {
 }
 
 MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator++() {
+    if(*this == this->end()){
+        throw runtime_error ("beyond limits");
+    }
     this->currentIndex = this->currentIndex+1;
     return *this;
 }
@@ -98,7 +101,7 @@ MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::begin()
 
 MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() const {
     AscendingIterator iterator(*container);
-    iterator.currentIndex = (size_t)(container->size());
+    iterator.currentIndex = size_t(container->size());
     return iterator;
 }
 
@@ -159,6 +162,9 @@ int MagicalContainer::SideCrossIterator::operator*() const {
 }
 
 MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator++() {
+    if(*this == this->end()){
+        throw runtime_error ("beyond limits");
+    }
     if(flag){
         this->currentIndexLeft++;
     }
@@ -168,11 +174,6 @@ MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operat
     flag = !flag;
     return *this;
 }
-
-// MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator--() {
-//     this->currentIndex = this->currentIndex-1;
-//     return *this;
-// }
 
 MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::begin() const {
     SideCrossIterator iterator(*container);
@@ -188,27 +189,21 @@ MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() c
         iterator.currentIndexRight = iterator.currentIndexLeft-1;
     }
     else{
-        
-
+        iterator.currentIndexLeft = size_t((container->size()/2));
+        iterator.currentIndexRight = iterator.currentIndexLeft-1;
     }
     return iterator;
 }
 
 //--------------------PrimeIterator-------------------------------------//
 
-bool MagicalContainer::PrimeIterator::isPrime(int number)
+bool MagicalContainer::PrimeIterator::isPrime(int number) // this function taken from stack overflow
 {
-    if(number < 2)//1,0 or negetive integers are not primes. 
-    {
+    if(number<2 || (!(number&1) && number!=2))
         return false;
-    }
-    if(number == 2){
-        return true;
-    }
-    for(int i = 3;i<=sqrt(number);i+=2){
-        if(number%i == 0){
+    for(int i=3; i*i<=number; i+=2){
+        if(!(number%i))
             return false;
-        }
     }
     return true;
 }
@@ -262,7 +257,10 @@ int MagicalContainer::PrimeIterator::operator*() const {
 }
 
 MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++() {
-    this->currentIndex = this->currentIndex+1;
+    if(*this == this->end()){
+        throw runtime_error ("beyond limits");
+    }
+    currentIndex++;
     return *this;
 }
 
