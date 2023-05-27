@@ -39,9 +39,10 @@ MagicalContainer& MagicalContainer::operator=(const MagicalContainer& other){
     return *this;
 }
 
+//--------------------AscendingIterator-------------------------------------//
 
 MagicalContainer::AscendingIterator::AscendingIterator(MagicalContainer container)
-    : container(container), currentIndex(0) {
+    : container(&container), currentIndex(0) {
     
 }
 
@@ -80,7 +81,7 @@ bool MagicalContainer::AscendingIterator::operator>(const AscendingIterator& oth
 }
 
 int MagicalContainer::AscendingIterator::operator*() const {
-    return this->container.elements.at(currentIndex);
+    return this->container->elements.at(currentIndex);
 }
 
 MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator++() {
@@ -89,23 +90,25 @@ MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operat
 }
 
 MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::begin() const {
-    AscendingIterator iterator(container);
+    AscendingIterator iterator(*container);
     iterator.currentIndex = 0;
     return iterator;
 }
 
 MagicalContainer::AscendingIterator MagicalContainer::AscendingIterator::end() const {
-    AscendingIterator iterator(container);
-    iterator.currentIndex = container.size();
+    AscendingIterator iterator(*container);
+    iterator.currentIndex = container->size();
     return iterator;
 }
 
+//--------------------SideCrossIterator-------------------------------------//
+
 MagicalContainer::SideCrossIterator::SideCrossIterator(MagicalContainer container)
-    : container(container), currentIndex(0) {
+    : container(&container), currentIndexLeft(0),currentIndexRight(container.size()), flag(true) {
 }
 
 MagicalContainer::SideCrossIterator::SideCrossIterator(const SideCrossIterator& other)
-    : container(other.container), currentIndex(other.currentIndex) {
+    : container(other.container), currentIndexLeft(other.currentIndexLeft), currentIndexRight(other.currentIndexRight) {
 }
 
 MagicalContainer::SideCrossIterator::~SideCrossIterator() {
@@ -114,53 +117,78 @@ MagicalContainer::SideCrossIterator::~SideCrossIterator() {
 MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const SideCrossIterator& other) {
     if (this != &other) {
         container = other.container;
-        currentIndex = other.currentIndex;
+        currentIndexLeft = other.currentIndexLeft;
+        currentIndexRight = other.currentIndexRight;
+        flag = other.flag;
     }
     return *this;
 }
 
 bool MagicalContainer::SideCrossIterator::operator==(const SideCrossIterator& other) const {
-    return this->currentIndex == other.currentIndex;
+    return this->currentIndexLeft == other.currentIndexLeft && this->currentIndexRight == other.currentIndexRight;
 }
 
 bool MagicalContainer::SideCrossIterator::operator!=(const SideCrossIterator& other) const {
-    return this->currentIndex != other.currentIndex;
+    return !(*this == other);
 }
 
 bool MagicalContainer::SideCrossIterator::operator<(const SideCrossIterator& other) const {
-    return this->currentIndex < other.currentIndex;
+    return !(*this > other) && (*this != other); // only lower than without <=.
 }
 
 bool MagicalContainer::SideCrossIterator::operator>(const SideCrossIterator& other) const {
-    return this->currentIndex > other.currentIndex;
+    if(currentIndexLeft > other.currentIndexLeft){
+        return true;
+    }
+    if(currentIndexLeft < other.currentIndexLeft){
+        return false;
+    }
+    //currentIndexLeft == other.currentIndexLeft
+    if(currentIndexRight < other.currentIndexRight){
+        return true;
+    }
+    return false;
 }
 
 int MagicalContainer::SideCrossIterator::operator*() const {
-    return this->container.elements.at(currentIndex);
+    if(flag){
+        return this->container->elements.at(currentIndexLeft);
+    }
+    return this->container->elements.at(currentIndexRight);
 }
 
 MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator++() {
-    this->currentIndex = this->currentIndex+1;
+    if(flag){
+        this->currentIndexLeft = this->currentIndexLeft+1;
+    }
+    else{
+        this->currentIndexRight = this->currentIndexRight-1;
+    }
     return *this;
 }
 
-MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator--() {
-    this->currentIndex = this->currentIndex-1;
-    return *this;
-}
+// MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator--() {
+//     this->currentIndex = this->currentIndex-1;
+//     return *this;
+// }
 
 MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::begin() const {
-    SideCrossIterator iterator(container);
-    iterator.currentIndex = 0;
+    SideCrossIterator iterator(*container);
+    iterator.currentIndexLeft = 0;
+    iterator.currentIndexRight = container->size();
     return iterator;
 }
 
 MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() const {
-    // end implementation
+    SideCrossIterator iterator(*container);
+    if(container->size()%2 != 0){
+        iterator.currentIndexLeft = container->size()/2;
+        iterator.currentIndexRight = iterator.currentIndexLeft;
+    }
     return *this;
 }
 
-// Implement empty bodies for PrimeIterator
+//--------------------PrimeIterator-------------------------------------//
 
 MagicalContainer::PrimeIterator::PrimeIterator(MagicalContainer container)
     : container(container), currentIndex(0) {

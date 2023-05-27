@@ -20,7 +20,7 @@ public:
     class AscendingIterator
     {
     private:
-        MagicalContainer& container;
+        MagicalContainer* container;
         size_t currentIndex;
 
     public:
@@ -44,8 +44,10 @@ public:
     class SideCrossIterator
     {
     private:
-        MagicalContainer& container;
-        size_t currentIndex;
+        MagicalContainer* container;
+        size_t currentIndexLeft;
+        size_t currentIndexRight;
+        bool flag;
 
     public:
         SideCrossIterator(MagicalContainer container);
@@ -61,7 +63,7 @@ public:
         int operator*() const;
 
         SideCrossIterator& operator++();//preincrement
-        SideCrossIterator& operator--();
+        // SideCrossIterator& operator--();
         SideCrossIterator begin() const;
         SideCrossIterator end() const;
     };
@@ -89,10 +91,4 @@ public:
         PrimeIterator begin() const;
         PrimeIterator end() const;
     };
-    AscendingIterator beginAscending() const;
-    AscendingIterator endAscending() const;
-    SideCrossIterator beginSideCross() const;
-    SideCrossIterator endSideCross() const;
-    PrimeIterator beginPrime() const;
-    PrimeIterator endPrime() const;
 };
