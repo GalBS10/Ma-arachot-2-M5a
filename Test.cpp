@@ -1,5 +1,5 @@
 #include "doctest.h"
-#include "sources/MagicalContainer.h"
+#include "sources/MagicalContainer.hpp"
 #include <stdexcept>
 
 // Test case for adding elements to the MagicalContainer
@@ -559,5 +559,53 @@ TEST_CASE("SideCrossIterator with Single Element") {
     }
 }
 
+// TEST_CASE("operator= throws when iterators are from different types") {
+//     MagicalContainer container;
+
+//     container.addElement(1);
+//     container.addElement(2);
+//     container.addElement(3);
+
+//     MagicalContainer::AscendingIterator it1(container);
+//     MagicalContainer::PrimeIterator it2(container);
+//     MagicalContainer::SideCrossIterator i3(container);
+
+//     CHECK_THROWS_AS(it1 = it2, std::runtime_error);
+// }
+
+TEST_CASE("operator= throws when iterators are pointing at different containers") {
+    MagicalContainer container1;
+    MagicalContainer container2;
+
+    container1.addElement(1);
+    container1.addElement(2);
+    container1.addElement(3);
+
+    container2.addElement(4);
+    container2.addElement(5);
+    container2.addElement(6);    
+
+   SUBCASE("AscendingIterator")
+   {
+        MagicalContainer::AscendingIterator it1(container1);
+        MagicalContainer::AscendingIterator it2(container2);
+
+        CHECK_THROWS_AS(it1 = it2, std::runtime_error);
+   }
+   SUBCASE("SideCrossIterator")
+   {
+        MagicalContainer::SideCrossIterator it1(container1);
+        MagicalContainer::SideCrossIterator it2(container2);
+
+        CHECK_THROWS_AS(it1 = it2, std::runtime_error);
+   }
+   SUBCASE("AscendingIterator")
+   {
+        MagicalContainer::PrimeIterator it1(container1);
+        MagicalContainer::PrimeIterator it2(container2);
+
+        CHECK_THROWS_AS(it1 = it2, std::runtime_error);
+   }
+}
 
 

@@ -1,4 +1,4 @@
-#include "MagicalContainer.h"
+#include "MagicalContainer.hpp"
 #include <algorithm>
 #include <cmath>
 
@@ -16,7 +16,12 @@ MagicalContainer::MagicalContainer()
 void MagicalContainer::addElement(int element)
 {
     elements.emplace_back(element);
+    if(isPrime(element)){
+        prime_elements.emplace_back(element);
+    }
+    sort(elements.begin(),elements.end());
 }
+
 void MagicalContainer::removeElement(int element)
 {
     auto to_remove = find(elements.begin(),elements.end(),element);
@@ -28,6 +33,7 @@ void MagicalContainer::removeElement(int element)
         throw std::runtime_error("Element not found in the container");
     }
 }
+
 int MagicalContainer::size()
 {
     return elements.size();
@@ -44,7 +50,7 @@ MagicalContainer& MagicalContainer::operator=(const MagicalContainer& other){
 
 MagicalContainer::AscendingIterator::AscendingIterator(MagicalContainer& container)
     : container(&container), currentIndex(0) {
-    sort(this->container->elements.begin(),this->container->elements.end());
+    
 }
 
 MagicalContainer::AscendingIterator::AscendingIterator(const AscendingIterator& other)
@@ -58,14 +64,19 @@ MagicalContainer::AscendingIterator::~AscendingIterator() {
 
 MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(const AscendingIterator& other) {
     if (this != &other) {
-        container = other.container;
+        if(container != other.container){
+            throw runtime_error ("the containers are differents");
+        }
         currentIndex = other.currentIndex;
     }
     return *this;
 }
 
 bool MagicalContainer::AscendingIterator::operator==(const AscendingIterator& other) const {
-    
+
+    if(container != other.container){
+            return false; 
+        }
     return this->currentIndex == other.currentIndex;
 }
 
@@ -120,7 +131,9 @@ MagicalContainer::SideCrossIterator::~SideCrossIterator() {
 
 MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const SideCrossIterator& other) {
     if (this != &other) {
-        container = other.container;
+        if(container != other.container){
+            throw runtime_error ("the containers are differents");
+        }
         currentIndexLeft = other.currentIndexLeft;
         currentIndexRight = other.currentIndexRight;
         flag = other.flag;
@@ -129,6 +142,9 @@ MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operat
 }
 
 bool MagicalContainer::SideCrossIterator::operator==(const SideCrossIterator& other) const {
+    if(container != other.container){
+            return false; 
+    }
     return this->currentIndexLeft == other.currentIndexLeft && this->currentIndexRight == other.currentIndexRight;
 }
 
@@ -197,7 +213,7 @@ MagicalContainer::SideCrossIterator MagicalContainer::SideCrossIterator::end() c
 
 //--------------------PrimeIterator-------------------------------------//
 
-bool MagicalContainer::PrimeIterator::isPrime(int number) // this function taken from stack overflow
+bool MagicalContainer::isPrime(int number) // this function taken from stack overflow
 {
     if(number<2 || (!(number&1) && number!=2))
         return false;
@@ -209,17 +225,17 @@ bool MagicalContainer::PrimeIterator::isPrime(int number) // this function taken
 }
 
 MagicalContainer::PrimeIterator::PrimeIterator(MagicalContainer& container)
-    : container(&container), currentIndex(0), primes() {
+    : container(&container), currentIndex(0){
 
-    for(size_t i = 0; i<container.size(); i++){
-        if(isPrime(container.elements.at(i))){
-            primes.emplace_back(container.elements.at(i));
-        }
-    }
+    // for(size_t i = 0; i<container.size(); i++){
+    //     if(isPrime(container.elements.at(i))){
+    //         primes.emplace_back(container.elements.at(i));
+    //     }
+    // }
 }
 
 MagicalContainer::PrimeIterator::PrimeIterator(const PrimeIterator& other)
-    : container(other.container), currentIndex(other.currentIndex), primes(other.primes) {
+    : container(other.container), currentIndex(other.currentIndex){
 
 }
 
@@ -228,20 +244,23 @@ MagicalContainer::PrimeIterator::~PrimeIterator() {
 
 MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(const PrimeIterator& other) {
     if (this != &other) {
-        container = other.container;
+        if(container != other.container){
+            throw runtime_error ("the containers are differents");
+        }
         currentIndex = other.currentIndex;
-        primes = other.primes;
     }
     return *this;
 }
 
 bool MagicalContainer::PrimeIterator::operator==(const PrimeIterator& other) const {
-    
+    if(container != other.container){
+        return false; 
+    }
     return currentIndex == other.currentIndex;
 }
 
 bool MagicalContainer::PrimeIterator::operator!=(const PrimeIterator& other) const {
-    return currentIndex != other.currentIndex;
+    return !(*this == other);
 }
 
 bool MagicalContainer::PrimeIterator::operator<(const PrimeIterator& other) const {
@@ -253,7 +272,7 @@ bool MagicalContainer::PrimeIterator::operator>(const PrimeIterator& other) cons
 }
 
 int MagicalContainer::PrimeIterator::operator*() const {
-    return primes.at(currentIndex);
+    return container->prime_elements.at(currentIndex);
 }
 
 MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++() {
@@ -268,14 +287,12 @@ MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator++() {
 MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::begin() const{
     MagicalContainer::PrimeIterator it(*container);
     it.currentIndex = 0;
-    it.primes = primes;
     return it;
 }
 
 MagicalContainer::PrimeIterator MagicalContainer::PrimeIterator::end() const {
     MagicalContainer::PrimeIterator it(*container);
-    it.currentIndex = primes.size();
-    it.primes = primes;
+    it.currentIndex = container->prime_elements.size();
     return it;
 }
 
