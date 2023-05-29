@@ -8,10 +8,25 @@ MagicalContainer::MagicalContainer()
 {
     elements =  vector<int>();
 }
-// MagicalContainer::~MagicalContainer()
-// {
-//     //vector destructor will handle it.
-// }
+MagicalContainer::~MagicalContainer()
+{
+    // The vector destructor will handle it.
+}
+
+MagicalContainer::MagicalContainer(const MagicalContainer& other)
+{
+    elements = other.elements;
+    prime_elements = other.prime_elements;
+}
+MagicalContainer& MagicalContainer::operator=(MagicalContainer&& other) noexcept
+{
+    if (this != &other)
+    {
+        elements = std::move(other.elements);
+        prime_elements = std::move(other.prime_elements);
+    }
+    return *this;
+}
 
 void MagicalContainer::addElement(int element)
 {
@@ -58,8 +73,24 @@ MagicalContainer::AscendingIterator::AscendingIterator(const AscendingIterator& 
     
 }
 
+MagicalContainer::AscendingIterator::AscendingIterator(AscendingIterator&& other) noexcept
+    : container(other.container), currentIndex(other.currentIndex) {
+    other.container = nullptr;
+    other.currentIndex = 0;
+}
+
 MagicalContainer::AscendingIterator::~AscendingIterator() {
     
+}
+
+MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(AscendingIterator&& other) noexcept {
+    if (this != &other) {
+        container = other.container;
+        currentIndex = other.currentIndex;
+        other.container = nullptr;
+        other.currentIndex = 0;
+    }
+    return *this;
 }
 
 MagicalContainer::AscendingIterator& MagicalContainer::AscendingIterator::operator=(const AscendingIterator& other) {
@@ -129,6 +160,14 @@ MagicalContainer::SideCrossIterator::SideCrossIterator(const SideCrossIterator& 
 MagicalContainer::SideCrossIterator::~SideCrossIterator() {
 }
 
+MagicalContainer::SideCrossIterator::SideCrossIterator(SideCrossIterator&& other) noexcept
+    : container(other.container), currentIndexLeft(other.currentIndexLeft), currentIndexRight(other.currentIndexRight), flag(other.flag) {
+    other.container = nullptr;
+    other.currentIndexLeft = 0;
+    other.currentIndexRight = 0;
+    other.flag = true;
+}
+
 MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(const SideCrossIterator& other) {
     if (this != &other) {
         if(container != other.container){
@@ -137,6 +176,20 @@ MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operat
         currentIndexLeft = other.currentIndexLeft;
         currentIndexRight = other.currentIndexRight;
         flag = other.flag;
+    }
+    return *this;
+}
+
+MagicalContainer::SideCrossIterator& MagicalContainer::SideCrossIterator::operator=(SideCrossIterator&& other) noexcept {
+    if (this != &other) {
+        container = other.container;
+        currentIndexLeft = other.currentIndexLeft;
+        currentIndexRight = other.currentIndexRight;
+        flag = other.flag;
+        other.container = nullptr;
+        other.currentIndexLeft = 0;
+        other.currentIndexRight = 0;
+        other.flag = true;
     }
     return *this;
 }
@@ -239,6 +292,12 @@ MagicalContainer::PrimeIterator::PrimeIterator(const PrimeIterator& other)
 
 }
 
+MagicalContainer::PrimeIterator::PrimeIterator(PrimeIterator&& other) noexcept
+    : container(other.container), currentIndex(other.currentIndex) {
+    other.container = nullptr;
+    other.currentIndex = 0;
+}
+
 MagicalContainer::PrimeIterator::~PrimeIterator() {
 }
 
@@ -248,6 +307,16 @@ MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(cons
             throw runtime_error ("the containers are differents");
         }
         currentIndex = other.currentIndex;
+    }
+    return *this;
+}
+
+MagicalContainer::PrimeIterator& MagicalContainer::PrimeIterator::operator=(PrimeIterator&& other) noexcept {
+    if (this != &other) {
+        container = other.container;
+        currentIndex = other.currentIndex;
+        other.container = nullptr;
+        other.currentIndex = 0;
     }
     return *this;
 }

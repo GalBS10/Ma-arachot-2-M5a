@@ -13,14 +13,18 @@ private:
 public:
     std::vector<int> elements;
     std::vector<int> prime_elements;
+
     MagicalContainer();
-    // ~MagicalContainer();
+    ~MagicalContainer();
+    MagicalContainer(const MagicalContainer& other);
+    MagicalContainer(MagicalContainer&& other) noexcept;
 
     bool isPrime(int number);
     void addElement(int element);
     void removeElement(int element);
     int size();
     MagicalContainer& operator=(const MagicalContainer& other);
+    MagicalContainer& operator=(MagicalContainer&& other) noexcept;
 
 
     class AscendingIterator
@@ -32,8 +36,10 @@ public:
     public:
         AscendingIterator(MagicalContainer& container);
         AscendingIterator(const AscendingIterator& other);
+        AscendingIterator(AscendingIterator&& other) noexcept;
         ~AscendingIterator();
         AscendingIterator& operator=(const AscendingIterator& other);
+        AscendingIterator& operator=(AscendingIterator&& other) noexcept;
 
         bool operator==(const AscendingIterator& other) const;
         bool operator!=(const AscendingIterator& other) const;
@@ -58,8 +64,10 @@ public:
     public:
         SideCrossIterator(MagicalContainer& container);
         SideCrossIterator(const SideCrossIterator& other);
+        SideCrossIterator(SideCrossIterator&& other) noexcept;
         ~SideCrossIterator();
         SideCrossIterator& operator=(const SideCrossIterator& other);
+        SideCrossIterator& operator=(SideCrossIterator&& other) noexcept;
 
         bool operator==(const SideCrossIterator& other) const;
         bool operator!=(const SideCrossIterator& other) const;
@@ -84,8 +92,10 @@ public:
     public:
         PrimeIterator(MagicalContainer& container);
         PrimeIterator(const PrimeIterator& other);
+        PrimeIterator(PrimeIterator&& other) noexcept;
         ~PrimeIterator();
         PrimeIterator& operator=(const PrimeIterator& other);
+        PrimeIterator& operator=(PrimeIterator&& other) noexcept;
 
         bool operator==(const PrimeIterator& other) const;
         bool operator!=(const PrimeIterator& other) const;
