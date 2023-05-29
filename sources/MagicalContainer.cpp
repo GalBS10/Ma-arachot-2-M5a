@@ -8,6 +8,7 @@ MagicalContainer::MagicalContainer()
 {
     elements =  vector<int>();
 }
+
 MagicalContainer::~MagicalContainer()
 {
     // The vector destructor will handle it.
@@ -216,7 +217,6 @@ bool MagicalContainer::SideCrossIterator::operator>(const SideCrossIterator& oth
     if(currentIndexLeft < other.currentIndexLeft){
         return false;
     }
-    //currentIndexLeft == other.currentIndexLeft
     if(currentIndexRight < other.currentIndexRight){
         return true;
     }
@@ -280,11 +280,6 @@ bool MagicalContainer::isPrime(int number) // this function taken from stack ove
 MagicalContainer::PrimeIterator::PrimeIterator(MagicalContainer& container)
     : container(&container), currentIndex(0){
 
-    // for(size_t i = 0; i<container.size(); i++){
-    //     if(isPrime(container.elements.at(i))){
-    //         primes.emplace_back(container.elements.at(i));
-    //     }
-    // }
 }
 
 MagicalContainer::PrimeIterator::PrimeIterator(const PrimeIterator& other)
